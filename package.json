@@ -1,0 +1,24 @@
+{
+  "name": "spotify-playlists",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tailwindcss -i ./src/input.css -o ./dist/output.css",
+    "watch": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gitdela/spotify-playlists.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gitdela/spotify-playlists/issues"
+  },
+  "homepage": "https://github.com/gitdela/spotify-playlists#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.3.2"
+  }
+}
