@@ -114,18 +114,25 @@ async function fetchArtistGenre(trackArtistId, accessToken) {
 
 async function getUserId(accessToken) {
   try {
-    const userId = await fetch('https://api.spotify.com/v1/me', {
+    const response = await fetch('https://api.spotify.com/v1/me', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
+
     if (!response.ok) {
       throw new Error('Failed to get user ID');
     }
+
+    const data = await response.json();
+    const userId = data.id;
+    return userId;
   } catch (error) {
     console.error(error);
   }
 }
+
+// now we have the array of matchedSongs, let's create the playlist
 
 // this is the main controller function
 // it is the only one called globally after the app loads
@@ -160,6 +167,59 @@ async function main() {
     );
   }
 
+  async function createPlaylist(
+    accessToken,
+    currentUserId,
+    playlistName,
+    trackURIs
+  ) {
+    try {
+      // create a new playlist keke
+      const response = await fetch(
+        `https://api.spotify.com/v1/users/${currentUserId}/playlists`,
+        {
+          method: 'POST',
+          headers: {
+            'content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            name: playlistName,
+            public: true,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to create playlist');
+      }
+
+      // after creating the playlist name, we need to add songs
+      // grab that playlist and get its id
+
+      const data = await response.json();
+      console.log(data);
+      const playlistId = data.id;
+      console.log(playlistId);
+
+      // now let's add songs to the playlist via it's id
+
+      await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          uris: trackURIs,
+        }),
+      });
+      console.log('Playlist created successfully!');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const playlistId = '37i9dQZEVXbLRQDuF5jeBp';
   // notice that when the user comes in initially, accessToken declared for the localStorage was not used
   // but it was still declared
@@ -181,7 +241,7 @@ async function main() {
     'canadian hip hop',
     'conscious hip hop',
   ];
-  let matchedGenres;
+  let matchedSongs = [];
   const playlistContainer = document.querySelector('#pl-con');
   // i was using forEach to iterate over the playlistData
   // but to get the genre of the artist, i needed to fetch the track details again
@@ -198,11 +258,12 @@ async function main() {
     const artistGenre = await fetchArtistGenre(trackArtistID, accessToken);
     // console.log(artistGenre);
 
-    matchedGenres = artistGenre.filter((genre) => wantedGenres.includes(genre));
-
-    console.log(matchedGenres);
+    const matchedGenres = artistGenre.filter((genre) =>
+      wantedGenres.includes(genre)
+    );
 
     if (matchedGenres.length > 0) {
+      matchedSongs.push(track);
       const trackElement = document.createElement('p');
       trackElement.textContent = `${trackName} - ${trackArtist}`;
       playlistContainer.appendChild(trackElement);
@@ -214,6 +275,15 @@ async function main() {
   // we have to fetch again. this time to the /me end point
 
   const currentUserId = await getUserId(accessToken);
+  // console.log(currentUserId);
+
+  // now to create the playlist on spotify, we need the accessToken, currentUserId, playlistName, trackURIs
+  // we have everything now apart from the trackURIs and a name for the playlist
+
+  const playlistName = 'Steelo Pro: Current Global Hiphop';
+  const trackURIs = matchedSongs.map((track) => track.track.uri);
+
+  createPlaylist(accessToken, currentUserId, playlistName, trackURIs);
 }
 
 main();
