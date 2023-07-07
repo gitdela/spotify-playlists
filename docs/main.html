@@ -7,8 +7,50 @@
     <link rel="stylesheet" href="output.css" />
     <title>KENLISTS</title>
   </head>
-  <body>
-    <div id="pl-con" class="text-sm text-green-600"></div>
+  <body class="bg-black text-white">
+    <main class="w-screen">
+      <div id="main-con" class="w-full h-full flex flex-col px-3">
+        <h1 class="text-3xl font-bold my-12 text-center">
+          Steelo Pro Playlists
+        </h1>
+        <div>
+          <div>
+            <span class="text-sm my-1">Choose a playlist</span>
+            <select
+              name=""
+              id=""
+              class="w-full mb-4 py-2 px-2 text-lg font-bold text-black appearance-none"
+            >
+              <option value="" class="w-full">Top 50 Global</option>
+            </select>
+            <button
+              class="bg-green-500 w-full rounded-full text-lg text-white my-4 py-3"
+              id="load-pl-btn"
+            >
+              See Hiphop Songs in Playlist
+            </button>
+            <div id="pl-con" class="my-3">
+              <!-- <div class="">
+                <img
+                  src="https://source.unsplash.com/60x60/?nature,water"
+                  alt=""
+                />
+              </div>
+              <div class="w-full flex flex-col justify-around pl-2">
+                <span class="text-md">Over my dead body</span>
+                <span class="text-xs">Olivia Rodrigo</span>
+              </div> -->
+            </div>
+          </div>
+        </div>
+        <button
+          class="bg-green-500 text-lg text-white rounded-full mb-8 py-3 hidden"
+          id="cr-pl-btn"
+        >
+          Get it on Spotify
+        </button>
+      </div>
+    </main>
 
     <script src="main.js"></script>
   </body>

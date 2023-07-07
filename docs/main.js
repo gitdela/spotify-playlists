@@ -132,6 +132,90 @@ async function getUserId(accessToken) {
   }
 }
 
+function createPlaylistOnUI(matchedSongs) {
+  const loadPlaylistBtn = document.querySelector('#load-pl-btn');
+  loadPlaylistBtn.classList.add('hidden');
+  console.log(matchedSongs);
+  const playlistContainer = document.querySelector('#pl-con');
+  const createPlaylistBtn = document.querySelector('#cr-pl-btn');
+  matchedSongs.forEach((track) => {
+    const trackName = track.track.name;
+    const trackArtist = track.track.artists[0].name;
+    const songsContainer = document.createElement('div');
+    songsContainer.classList.add(
+      'w-full',
+      'flex',
+      'flex-col',
+      'justify-around',
+      'pl-2',
+      'my-2'
+    );
+    const songSpan = document.createElement('span');
+    songSpan.classList.add('text-md');
+    const artistSpan = document.createElement('span');
+    artistSpan.classList.add('text-xs');
+    songSpan.innerHTML = `${trackName}`;
+    artistSpan.innerHTML = `${trackArtist}`;
+    songsContainer.appendChild(songSpan);
+    songsContainer.appendChild(artistSpan);
+    playlistContainer.appendChild(songsContainer);
+  });
+  createPlaylistBtn.classList.remove('hidden');
+}
+
+async function createPlaylist(
+  accessToken,
+  currentUserId,
+  playlistName,
+  trackURIs
+) {
+  try {
+    // create a new playlist keke
+    const response = await fetch(
+      `https://api.spotify.com/v1/users/${currentUserId}/playlists`,
+      {
+        method: 'POST',
+        headers: {
+          'content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          name: playlistName,
+          public: true,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to create playlist');
+    }
+
+    // after creating the playlist name, we need to add songs
+    // grab that playlist and get its id
+
+    const data = await response.json();
+    console.log(data);
+    const playlistId = data.id;
+    console.log(playlistId);
+
+    // now let's add songs to the playlist via it's id
+
+    await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        uris: trackURIs,
+      }),
+    });
+    console.log('Playlist created successfully!');
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 // now we have the array of matchedSongs, let's create the playlist
 
 // this is the main controller function
@@ -167,59 +251,6 @@ async function main() {
     );
   }
 
-  async function createPlaylist(
-    accessToken,
-    currentUserId,
-    playlistName,
-    trackURIs
-  ) {
-    try {
-      // create a new playlist keke
-      const response = await fetch(
-        `https://api.spotify.com/v1/users/${currentUserId}/playlists`,
-        {
-          method: 'POST',
-          headers: {
-            'content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({
-            name: playlistName,
-            public: true,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to create playlist');
-      }
-
-      // after creating the playlist name, we need to add songs
-      // grab that playlist and get its id
-
-      const data = await response.json();
-      console.log(data);
-      const playlistId = data.id;
-      console.log(playlistId);
-
-      // now let's add songs to the playlist via it's id
-
-      await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          uris: trackURIs,
-        }),
-      });
-      console.log('Playlist created successfully!');
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   const playlistId = '37i9dQZEVXbLRQDuF5jeBp';
   // notice that when the user comes in initially, accessToken declared for the localStorage was not used
   // but it was still declared
@@ -228,7 +259,7 @@ async function main() {
   // that is how come we were able to pass its value to the fetchPlaylist() here even though it's not in the if block
   // we will be fetching here too so do not forget to await it
   const playlistData = await fetchPlaylistById(playlistId, accessToken);
-  console.log(playlistData);
+  // console.log(playlistData);
   const wantedGenres = [
     'hiphop',
     'hip hop',
@@ -252,8 +283,6 @@ async function main() {
   // for of loop does and that is why it is in use here. REMEMBER THAT
   for (const track of playlistData) {
     // const trackId = track.track.id;
-    const trackName = track.track.name;
-    const trackArtist = track.track.artists[0].name;
     const trackArtistID = track.track.artists[0].id;
     const artistGenre = await fetchArtistGenre(trackArtistID, accessToken);
     // console.log(artistGenre);
@@ -264,11 +293,15 @@ async function main() {
 
     if (matchedGenres.length > 0) {
       matchedSongs.push(track);
-      const trackElement = document.createElement('p');
-      trackElement.textContent = `${trackName} - ${trackArtist}`;
-      playlistContainer.appendChild(trackElement);
+      // const trackElement = document.createElement('p');
+      // trackElement.textContent = `${trackName} - ${trackArtist}`;
+      // playlistContainer.appendChild(trackElement);
     }
   }
+  const loadPlaylistBtn = document.querySelector('#load-pl-btn');
+  loadPlaylistBtn.addEventListener('click', () => {
+    createPlaylistOnUI(matchedSongs);
+  });
 
   // now we have the songs that we need
   // we need to grab the current user's id and do things to him lol
@@ -283,7 +316,11 @@ async function main() {
   const playlistName = 'Steelo Pro: Current Global Hiphop';
   const trackURIs = matchedSongs.map((track) => track.track.uri);
 
-  createPlaylist(accessToken, currentUserId, playlistName, trackURIs);
+  const createPlaylistBtn = document.querySelector('#cr-pl-btn');
+
+  createPlaylistBtn.addEventListener('click', async () => {
+    await createPlaylist(accessToken, currentUserId, playlistName, trackURIs);
+  });
 }
 
 main();
