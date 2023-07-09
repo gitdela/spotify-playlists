@@ -2,7 +2,7 @@ const spLogin = document.querySelector('#sp-login');
 
 function constrLink() {
   let clientId = 'dbfef9f44c2d4cd5a0ea254e1b42a559';
-  let redirectUri = 'gitdela.github.io/spotify-playlists/main.html';
+  let redirectUri = 'http://gitdela.github.io/spotify-playlists/main.html';
   let scopes =
     'playlist-modify-private playlist-modify-public user-top-read user-library-modify user-library-read';
   let array = new Uint32Array(1);
@@ -29,3 +29,4 @@ function constrLink() {
 spLogin.addEventListener('click', constrLink);
 
 // http://127.0.0.1:5500/docs/main.html
+// http://gitdela.github.io/spotify-playlists/main.html
