@@ -216,7 +216,7 @@ async function createPlaylist(
 
 async function main() {
   let accessToken = localStorage.getItem('access_token_key');
-  const redirectUri = 'http://127.0.0.1:5500/docs/main.html';
+  const redirectUri = 'gitdela.github.io/spotify-playlists/main.html';
   const clientId = 'dbfef9f44c2d4cd5a0ea254e1b42a559';
   const clientSecret = '855f16e387cf4ae3b7907e6dc9375993'; //gitdela.github.io/spotify-playlists/main.html
 
