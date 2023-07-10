@@ -164,6 +164,8 @@ function createPlaylistOnUI(matchedSongs) {
 
   playlistContainer.appendChild(fragment);
   createPlaylistBtn.classList.remove('hidden');
+
+  createPlaylistBtn.innerHTML = `<a href="https://open.spotify.com/playlist/${playlistId}" target="_blank">Create Playlist</a>`;
 }
 
 async function createPlaylist(
