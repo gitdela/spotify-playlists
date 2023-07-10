@@ -8,35 +8,39 @@
     <title>KENLISTS</title>
   </head>
   <body class="bg-black text-white">
-    <main class="w-screen">
+    <main class="w-screen xl:max-w-screen-lg xl:mx-auto">
       <div id="main-con" class="w-full h-full flex flex-col px-3">
-        <h1 class="text-3xl font-bold my-12 text-center">
+        <h1 class="text-3xl font-bold my-12 text-center xl:text-6xl xl:my-20">
           Steelo Pro Playlists
         </h1>
-        <div>
-          <div>
-            <span class="text-sm my-1">Choose a playlist</span>
+        <div id="default-ui">
+          <div class="w-full">
+            <span class="text-sm my-1 xl:text-xl"
+              >Select a playlist to extract hiphop songs from</span
+            >
             <select
               name=""
               id=""
-              class="w-full mb-4 py-2 px-2 text-lg font-bold text-black appearance-none"
+              class="w-full mb-4 py-2 px-2 text-lg font-bold text-black appearance-none xl:text-3xl xl:py-4 xl:px-4"
             >
-              <option value="" class="w-full">Top 50 Global</option>
+              <option value="" class="w-full">Radar: Top 100 Global</option>
             </select>
-            <button
-              class="bg-green-500 w-full rounded-full text-lg text-white my-4 py-3"
-              id="load-pl-btn"
-            >
-              See Hiphop Songs in Playlist
-            </button>
-            <div id="pl-con" class="my-3"></div>
+            <div class="w-full">
+              <button
+                class="bg-green-500 w-full rounded-full text-lg text-white my-4 py-3 hover:bg-green-800 xl:block xl:w-4/5 xl:mx-auto xl:py-6 xl:text-3xl xl:my-12"
+                id="load-pl-btn"
+              >
+                See Hiphop Songs in Playlist
+              </button>
+            </div>
+            <div id="pl-con" class="my-6"></div>
           </div>
         </div>
         <button
-          class="bg-green-500 text-lg text-white rounded-full mb-8 py-3 hidden"
+          class="bg-green-500 text-lg text-white rounded-full my-4 mb-6 py-3 hover:bg-green-800 hidden"
           id="cr-pl-btn"
         >
-          Get it on Spotify
+          Get on Spotify
         </button>
       </div>
     </main>

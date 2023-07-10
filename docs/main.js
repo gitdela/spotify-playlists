@@ -164,8 +164,6 @@ function createPlaylistOnUI(matchedSongs) {
 
   playlistContainer.appendChild(fragment);
   createPlaylistBtn.classList.remove('hidden');
-
-  createPlaylistBtn.innerHTML = `<a href="https://open.spotify.com/playlist/${playlistId}" target="_blank">Create Playlist</a>`;
 }
 
 async function createPlaylist(
@@ -175,13 +173,12 @@ async function createPlaylist(
   trackURIs
 ) {
   try {
-    // create a new playlist keke
     const response = await fetch(
       `https://api.spotify.com/v1/users/${currentUserId}/playlists`,
       {
         method: 'POST',
         headers: {
-          'content-Type': 'application/json',
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
@@ -196,9 +193,7 @@ async function createPlaylist(
     }
 
     const data = await response.json();
-    console.log(data);
     const playlistId = data.id;
-    console.log(playlistId);
 
     await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
       method: 'POST',
@@ -210,9 +205,51 @@ async function createPlaylist(
         uris: trackURIs,
       }),
     });
+
     console.log('Playlist created successfully!');
+    showPlaylistViewButton(playlistId);
   } catch (error) {
     console.error(error);
+  }
+}
+
+function showPlaylistViewButton(playlistId) {
+  const mainContentContainer = document.querySelector('#main-con');
+  const createPlaylistBtn = document.querySelector('#cr-pl-btn');
+  createPlaylistBtn.classList.add('hidden');
+
+  let playlistViewBtn = document.querySelector('#playlist-view-btn');
+
+  if (!playlistViewBtn) {
+    playlistViewBtn = document.createElement('button');
+    playlistViewBtn.id = 'playlist-view-btn';
+    playlistViewBtn.classList.add(
+      'bg-green-500',
+      'text-lg',
+      'text-white',
+      'rounded-full',
+      'my-4',
+      'mb-6',
+      'py-3',
+      'hover:bg-green-800'
+    );
+
+    const playlistViewLink = document.createElement('a');
+    playlistViewLink.href = `https://open.spotify.com/playlist/${playlistId}`;
+    playlistViewLink.target = '_blank';
+    playlistViewLink.textContent = 'View Playlist on Spotify';
+    playlistViewLink.classList.add(
+      'font-bold',
+      'text-white',
+      'text-center',
+      'text-lg'
+    );
+
+    playlistViewBtn.appendChild(playlistViewLink);
+    mainContentContainer.appendChild(playlistViewBtn);
+  } else {
+    const playlistViewLink = playlistViewBtn.querySelector('a');
+    playlistViewLink.href = `https://open.spotify.com/playlist/${playlistId}`;
   }
 }
 
@@ -220,9 +257,11 @@ async function main() {
   let accessToken = localStorage.getItem('access_token_key');
   const redirectUri = 'https://gitdela.github.io/spotify-playlists/main.html';
   const clientId = 'dbfef9f44c2d4cd5a0ea254e1b42a559';
-  const clientSecret = '855f16e387cf4ae3b7907e6dc9375993'; //https://gitdela.github.io/spotify-playlists/main.html
+  const clientSecret = '855f16e387cf4ae3b7907e6dc9375993';
+  // https://gitdela.github.io/spotify-playlists/main.html
+  // 127.0.0.1:5500/docs/main.html
 
-  if (!accessToken) {
+  http: if (!accessToken) {
     const authorizationCode = extractAuthorizationCode();
 
     accessToken = await exchangeCodeForToken(
@@ -247,7 +286,7 @@ async function main() {
     }
   }
 
-  const playlistId = '37i9dQZEVXbLRQDuF5jeBp';
+  const playlistId = '3IsxzDS04BvejFJcQ0iVyW';
   const playlistData = await fetchPlaylistById(playlistId, accessToken);
   console.log(playlistData);
   const wantedGenres = [

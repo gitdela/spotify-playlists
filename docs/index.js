@@ -28,5 +28,5 @@ function constrLink() {
 }
 spLogin.addEventListener('click', constrLink);
 
-// http://127.0.0.1:5500/docs/main.html
-// http://gitdela.github.io/spotify-playlists/main.html
+// https://127.0.0.1:5500/docs/main.html
+// https://gitdela.github.io/spotify-playlists/main.html
