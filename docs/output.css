@@ -522,6 +522,10 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.visible {
+  visibility: visible;
+}
+
 .my-1 {
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
@@ -563,6 +567,10 @@ video {
 
 .mb-6 {
   margin-bottom: 1.5rem;
+}
+
+.block {
+  display: block;
 }
 
 .flex {
