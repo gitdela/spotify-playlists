@@ -107,7 +107,7 @@ async function fetchPlaylistById(playlistId, accessToken) {
   try {
     // to fetch a playlist you need to embed the id in this url
     const response = await fetch(
-      `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+      `https://api.spotify.com/v1/playlists/${playlistId}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

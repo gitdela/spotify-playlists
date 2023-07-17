@@ -14,7 +14,7 @@ function constrLink() {
   let redirectUri = 'https://gitdela.github.io/spotify-playlists/main.html';
   // the scopes are the things you want to be able to modify on behalf of the user
   let scopes =
-    'playlist-modify-private playlist-modify-public user-top-read user-library-modify user-library-read';
+    'playlist-modify-private playlist-read-private playlist-read-collaborative playlist-modify-public user-top-read user-library-modify user-library-read';
   // Spotify requires some random values set to state
   // they're like a password that helps prevent link interception
   // chatGPT helped me here. i need to read more on this constructor
